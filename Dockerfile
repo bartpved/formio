@@ -11,9 +11,20 @@ WORKDIR /app
 # (note: using pinned versions to ensure immutable build environment)
 RUN apk update && \
     apk upgrade && \
-    apk add python=2.7.15-r1 && \
+    apk add python=2.7.15-r3 && \
     apk add make=4.2.1-r2 && \
-    apk add g++=6.4.0-r9
+#    apk add g++=6.4.0-r9
+    apk add g++=8.2.0-r2
+#RUN mkdir /app/
+#COPY ./ 
+#RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN addgroup -S formio && adduser -S formio -G formio
+
+RUN chown formio:formio /app
+#COPY ./* /app/
+#COPY ./src/util/util.js /src/util/util.js
+COPY ./ /app/
+RUN find /app/
 
 # Using an alternative package install location
 # to allow overwriting the /app folder at runtime
@@ -38,7 +49,7 @@ RUN ln -sf $NPM_PACKAGES/node_modules node_modules
 # Set this to inspect more from the application. Examples:
 #   DEBUG=formio:db (see index.js for more)
 #   DEBUG=formio:*
-ENV DEBUG=""
+ENV DEBUG="formio:*"
 
 # This will initialize the application based on
 # some questions to the user (login email, password, etc.)
